@@ -30,7 +30,6 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [infoImage, setInfoImage] = useState('');
   const [infoTitle, setInfoTitle] = useState('');
-  const [headerLink, setHeaderLink] = useState('');
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
   
@@ -41,13 +40,14 @@ function App() {
   });
   
   useEffect(() => {
-    api
-      .getProfileInfo()
-      .then((data) => {
-        setCurrentUser(data);
-      })
-      .catch((err) => console.log(err))
-    }, [])
+    if (loggedIn){
+      api
+        .getProfileInfo()
+        .then((data) => {
+          setCurrentUser(data);
+        })
+        .catch((err) => console.log(err))
+      }}, [])
 
   function openEditProfile() {
     {return setIsEditProfilePopupOpen(true)}
@@ -107,14 +107,15 @@ function App() {
       .signUp(data)
       .then((data) => {
         setInfoImage(ok);
-      setInfoTitle("Вы успешно зарегистрировались!");
-      openInfoTooltip();        
+        setInfoTitle("Вы успешно зарегистрировались!");
+        openInfoTooltip();
+        navigate("/sign-in");        
       })
-     .catch((err) => {
-      console.log(err);
-      setInfoImage(notOk);
-      setInfoTitle("Что-то пошло не так! Попробуйте ещё раз.");
-      openInfoTooltip();
+      .catch((err) => {
+        console.log(err);
+        setInfoImage(notOk);
+        setInfoTitle("Что-то пошло не так! Попробуйте ещё раз.");
+        openInfoTooltip();
       })
   }
 
@@ -129,11 +130,13 @@ function App() {
   }
 
   useEffect(() => {
-    api.getInitialCards()
-      .then((card) => {
-        setCards([...cards, ...card])
-    })
-      .catch(err => console.log(err))
+    if (loggedIn){
+      api.getInitialCards()
+        .then((card) => {
+          setCards([...cards, ...card])
+      })
+        .catch(err => console.log(err))
+    }
   }, [])
 
   function handleCardLike(card) {
@@ -169,7 +172,6 @@ function App() {
   function handleLogin() {
     //e.preventDefault(); //эта часть под вопросом пока
     return setLoggedIn(true)
-    console.log(loggedIn);
   }
 
   function handleLogOut() {
@@ -200,55 +202,64 @@ function App() {
 
   return (
     <>
-    <div className="page">
-      <CurrentUserContext.Provider value={currentUser}>
-      <Header 
-      email={email}
-      exitProfile={handleLogOut}
-      />
-      <Routes>
-        <Route path="/sign-in" element={<Login handleLogin={handleLogin} loginUser = {handleLoginUser}/>}>
-        </Route>
-        <Route path="/sign-up" element={<Register registerUser={handleRegisterUser}/>}>
-        </Route>
-        <Route exact path="/" element={
-          <ProtectedRoute loggedIn={loggedIn}>
-            <Main 
-              onEditProfile = {openEditProfile} 
-              onEditAvatar = {openPopupAvatar} 
-              onAddPlace = {openPopupMesto} 
-              onClose = {closeAllPopups}
-              onCardClick = {handleCardClick} 
-              cards = {cards}
-              onCardLike = {handleCardLike}
-              onCardDelete = {handleCardDelete} />
-            <Footer />
-          </ProtectedRoute>}>      
-        </Route>
-      </Routes>
+      <div className="page">
+        <CurrentUserContext.Provider value={currentUser}>
+          <Header 
+          email={email}
+          exitProfile={handleLogOut}
+          />
+          <Routes>
+            <Route path="/sign-in" element={<Login handleLogin={handleLogin} loginUser = {handleLoginUser}/>}>
+            </Route>
+            <Route path="/sign-up" element={<Register registerUser={handleRegisterUser}/>}>
+            </Route>
+            <Route exact path="/" element={
+            <ProtectedRoute loggedIn={loggedIn}>
+              <Main 
+                onEditProfile = {openEditProfile} 
+                onEditAvatar = {openPopupAvatar} 
+                onAddPlace = {openPopupMesto} 
+                onClose = {closeAllPopups}
+                onCardClick = {handleCardClick} 
+                cards = {cards}
+                onCardLike = {handleCardLike}
+                onCardDelete = {handleCardDelete} />
+              <Footer />
+            </ProtectedRoute>}>      
+            </Route>
+          </Routes>
       
-      <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onUpdateCards={handleAddPlaceSubmit}/>
-      <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar}/>
-      <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} /> 
-      <PopupWithForm 
-        onClose = {closeAllPopups}
-        popupSelector = {'popup_remove'} 
-        name = {`remove`} 
-        title = {'Вы уверены?'} 
-        buttonText = {'Да'}
-      />
-      <InfoTooltip 
-        isOpen={isInfoTooltipOpen}
-        onClose = {closeAllPopups}
-        title = {infoTitle}
-        image = {infoImage}
-      />
-      <ImagePopup 
-        onClose = {closeAllPopups}
-        card = {selectedCard}
-        isImagePopupOpen={isImagePopupOpen}
-      />
-      </CurrentUserContext.Provider>
+          <AddPlacePopup 
+            isOpen={isAddPlacePopupOpen} 
+            onClose={closeAllPopups} 
+            onUpdateCards={handleAddPlaceSubmit}/>
+          <EditAvatarPopup 
+            isOpen={isEditAvatarPopupOpen} 
+            onClose={closeAllPopups} 
+            onUpdateAvatar={handleUpdateAvatar}/>
+          <EditProfilePopup 
+            isOpen={isEditProfilePopupOpen} 
+            onClose={closeAllPopups} 
+            onUpdateUser={handleUpdateUser} /> 
+          <PopupWithForm 
+            onClose = {closeAllPopups}
+            popupSelector = {'popup_remove'} 
+            name = {`remove`} 
+            title = {'Вы уверены?'} 
+            buttonText = {'Да'}
+          />
+          <InfoTooltip 
+            isOpen={isInfoTooltipOpen}
+            onClose = {closeAllPopups}
+            title = {infoTitle}
+            image = {infoImage}
+          />
+          <ImagePopup 
+            onClose = {closeAllPopups}
+            card = {selectedCard}
+            isImagePopupOpen={isImagePopupOpen}
+          />
+        </CurrentUserContext.Provider>
       </div>
     </>
   );

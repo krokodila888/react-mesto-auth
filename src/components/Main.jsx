@@ -23,16 +23,16 @@ function Main(props) {
         <button aria-label="Добавить" className="profile__add-button" type="button" onClick={onAddPlace}></button>
       </section>
       <section className="elements">
-        {cards.map((item) =>
-        <div key={item._id}>
-          <Card 
-            card = {item}
-            onCardClick = {onCardClick}
-            onCardLike = {onCardLike}
-            onCardDelete = {onCardDelete}
-          />
-        </div>)}
-          
+        {cards.map((item) => (
+          <div key={item._id}>
+            <Card 
+              card = {item}
+              onCardClick = {onCardClick}
+              onCardLike = {onCardLike}
+              onCardDelete = {onCardDelete}
+            />
+          </div>)
+        )}
       </section>
     </main>
   );

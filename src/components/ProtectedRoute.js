@@ -6,14 +6,3 @@ const ProtectedRoute = ({ loggedIn, children  }) => {
 }
 
 export default ProtectedRoute;
-
-/*const ProtectedRoute = ({ component: Component, ...props  }) => {
-  return (
-    <Route>
-      {
-        () => props.loggedIn ? <Component {...props} /> : <Navigate to="./sign-in" />
-      }
-    </Route>
-)}
-
-export default ProtectedRoute;*/

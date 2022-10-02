@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { CurrentUserContext, currentUser } from '../contexts/CurrentUserContext';
-import { Link } from 'react-router-dom';
-import { sign } from '../utils/Sign.js';
-import { withRouter } from '../utils/withRouter.jsx';
 
 function Login (props) {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const {handleLogin, loginUser} = props;
-
-  
+ 
   function handleSubmit(e) {
     // Запрещаем браузеру переходить по адресу формы
       e.preventDefault();
@@ -21,8 +17,7 @@ function Login (props) {
     }
   
   return(
-    
-    <div className='sign__background'>
+     <div className='sign__background'>
       <div className="sign__container">
         <p className="sign__title">
           Вход

@@ -9,7 +9,6 @@ function AddPlacePopup(props) {
   const titleRef = React.useRef({});
   const linkRef = React.useRef({});
 
-
   function handleSubmit(e) {
     e.preventDefault();
     console.log(titleRef.current.value, linkRef.current.value);
