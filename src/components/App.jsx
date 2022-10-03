@@ -47,7 +47,7 @@ function App() {
           setCurrentUser(data);
         })
         .catch((err) => console.log(err))
-      }}, [])
+      }}, [loggedIn])
 
   function openEditProfile() {
     {return setIsEditProfilePopupOpen(true)}
@@ -137,7 +137,7 @@ function App() {
       })
         .catch(err => console.log(err))
     }
-  }, [])
+  }, [loggedIn])
 
   function handleCardLike(card) {
     // Снова проверяем, есть ли уже лайк на этой карточке
